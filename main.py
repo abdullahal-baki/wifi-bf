@@ -91,17 +91,17 @@ class BruteForcer:
 
         print("💀 Brute-force complete. Password not found.")
         self.save_progress("")
+    def main(self):
+        # ---------- Start ----------
+        print("🔧 Enabling Wi-Fi...")
+        self.run_cmd("su -c 'svc wifi enable'")
+        time.sleep(3)
 
-    # ---------- Start ----------
-    print("🔧 Enabling Wi-Fi...")
-    run_cmd("su -c 'svc wifi enable'")
-    time.sleep(3)
-
-    # Optional: run in thread (not needed here, but good structure)
-    thread = threading.Thread(target=brute_force)
-    thread.start()
-    thread.join()
+        # Optional: run in thread (not needed here, but good structure)
+        thread = threading.Thread(target=self.brute_force)
+        thread.start()
+        thread.join()
 
 if __name__ == "__main__":
     brute_forcer = BruteForcer('Sir')
-    brute_forcer.brute_force()
+    brute_forcer.main()
