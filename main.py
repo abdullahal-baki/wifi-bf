@@ -12,7 +12,7 @@ WAIT_TIME = 5  # seconds after each attempt
 
 class BruteForcer:
     def __init__(self, ssid):
-        os.mkdir("logs", exist_ok=True)
+        os.mkdir("logs") if not os.path.exists("logs") else None
         self.ssid = ssid
         self.progress_file = f'logs/{ssid}_wifi_bruteforce_progress.txt'
         self.max_retries = 3
