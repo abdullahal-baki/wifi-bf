@@ -7,8 +7,8 @@ import os
 WORDLIST_PATH = "passwords.txt"
 CRACKED_FILE = "cracked.txt"
 SECURITY = "wpa2"
-MAX_RETRIES = 3
-WAIT_TIME = 5  # seconds after each attempt
+MAX_RETRIES = 2
+WAIT_TIME = 3  # seconds after each attempt
 
 class BruteForcer:
     def __init__(self, ssid):
@@ -42,7 +42,7 @@ class BruteForcer:
 
     def save_success(self,password):
         with open(CRACKED_FILE, "a") as f:
-            f.write(self.bssid,":",password)
+            f.write(self.ssid,":",password)
         print(f"✅ Password saved to {CRACKED_FILE}")
     def save_progress(self,password):
         with open(self.progress_file, "w") as f:
