@@ -11,28 +11,39 @@ def run_cmd(cmd):
 
 
 def scan_networks():
-    print("📡 Scanning available Wi-Fi networks...")
-    code, out, err = run_cmd("su -c 'cmd -l wifi list-networks'")
+    print("📡 Scanning available Wi-Fi networks with 'iw'...")
+    code, out, err = run_cmd("su -c 'iw dev wlan0 scan | grep -E \"SSID|signal\"'")
+    time.sleep(2)  # Give some time for the scan to complete
+    if code != 0 or not out:
+        print("❌ Failed to scan networks:", err or "No output.")
+        return []
 
-    if code != 0 or "SSID" not in out:
-        print("⚠️ Fallback: using dumpsys wifi scan results")
-        code, out, err = run_cmd("su -c 'dumpsys wifi | grep -E \"SSID:|signal:|level:\"'")
-
+    lines = out.splitlines()
     networks = []
     ssid = None
-    for line in out.splitlines():
-        if "SSID:" in line:
-            ssid = line.split("SSID:")[-1].strip()
-        elif "signal" in line or "level" in line:
-            signal_str = line.strip().split()[-1]
+    signal = -100
+
+    for line in lines:
+        line = line.strip()
+        if line.startswith("signal:"):
             try:
-                signal = int(signal_str)
+                signal = float(line.split(":")[-1].strip().replace("dBm", "").strip())
             except:
                 signal = -100
-            if ssid and signal >= SIGNAL_THRESHOLD:
-                networks.append((ssid, signal))
-                ssid = None  # reset
-    return networks
+        elif line.startswith("SSID:"):
+            ssid = line.split("SSID:")[-1].strip()
+            if ssid and ssid != "":
+                networks.append((ssid, int(signal)))
+
+    # Remove duplicates: keep strongest signal
+    unique = {}
+    for ssid, sig in networks:
+        if ssid not in unique or sig > unique[ssid]:
+            unique[ssid] = sig
+
+    # Filter by signal strength threshold
+    return [(ssid, sig) for ssid, sig in unique.items() if sig >= SIGNAL_THRESHOLD]
+
 
 
 def main():
