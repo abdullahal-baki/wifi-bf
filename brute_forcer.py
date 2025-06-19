@@ -42,7 +42,7 @@ class BruteForcer:
 
     def save_success(self,password):
         with open(CRACKED_FILE, "a") as f:
-            f.write(self.ssid+":"+str(password))
+            f.write(self.ssid+":"+str(password)+"\n")
         print(f"✅ Password saved to {CRACKED_FILE}")
     def save_progress(self,password):
         with open(self.progress_file, "w") as f:
