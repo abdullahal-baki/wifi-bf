@@ -50,7 +50,7 @@ class BruteForcer:
 
     # ---------- Brute-Force Logic ----------
     def brute_force(self):
-        print(f"📡 Starting Wi-Fi brute-force on SSID: {self.bssid}")
+        print(f"📡 Starting Wi-Fi brute-force on SSID: {self.ssid}")
 
         try:
             with open(WORDLIST_PATH, "r") as f:
